@@ -10,7 +10,7 @@ Adicione ao seu `pubspec.yaml`:
 dependencies:
   valids_ui_kit:
     git:
-      url: https://github.com/usuario/valids_ui_kit.git
+      url: https://github.com/gmotta87/valids_ui_kit.git
 ```
 
 ## Uso
@@ -38,10 +38,29 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-### Componentes
+## Componentes Mapeados e Consolidados
 
-#### ValidsButton
+| Componente | Status | Descrição |
+| :--- | :--- | :--- |
+| **Tokens** | ✅ Implementado | Cores, Tipografia e Espaçamento. |
+| **ValidsTheme** | ✅ Implementado | Tema global configurado. |
+| **ValidsButton** | ✅ Implementado | Botões com variantes (Primary, Secondary, Outline, Ghost). |
+| **ValidsIconButton** | ✅ Implementado | Botões de ícone com variantes. |
+| **ValidsSwitch** | ✅ Implementado | Toggle switch customizado. |
+| **ValidsCheckbox** | ✅ Implementado | Checkbox com suporte a label. |
+| **ValidsRadioGroup** | ✅ Implementado | Grupo de opções radiais. |
+| **ValidsChip** | ✅ Implementado | Chips para filtros e tags. |
+| **ValidsAlert** | ✅ Implementado | Banners de feedback (Success, Error, Warning, Info). |
+| **ValidsDialog** | ✅ Implementado | Modais de confirmação e alerta. |
+| **ValidsListItem** | ✅ Implementado | Itens de lista padronizados. |
+| **ValidsAppBar** | ✅ Implementado | Barra superior com branding. |
+| **ValidsSeparator** | ✅ Implementado | Divisores horizontais e verticais. |
+| **ValidsSkeleton** | ✅ Implementado | Efeito de shimmer para carregamento. |
+| **ValidsSpinner** | ✅ Implementado | Indicador de progresso circular. |
 
+## Exemplos de Uso
+
+### ValidsButton
 ```dart
 ValidsButton(
   label: 'Enviar',
@@ -50,8 +69,7 @@ ValidsButton(
 )
 ```
 
-#### ValidsAlert
-
+### ValidsAlert
 ```dart
 ValidsAlert(
   title: 'Sucesso',
@@ -60,15 +78,14 @@ ValidsAlert(
 )
 ```
 
-## Componentes Mapeados e Consolidados
-
-| Componente | Status |
-| :--- | :--- |
-| ValidsButton | ✅ Implementado |
-| ValidsAlert | ✅ Implementado |
-| ValidsSeparator | ✅ Implementado |
-| ValidsTheme | ✅ Implementado |
-| Tokens (Cores, Tipografia, Espaçamento) | ✅ Implementado |
-| ValidsSwitch | ⏳ Pendente |
-| ValidsCheckbox | ⏳ Pendente |
-| ValidsSkeleton | ⏳ Pendente |
+### ValidsDialog
+```dart
+ValidsDialog.show(
+  context,
+  title: 'Confirmar Ação',
+  message: 'Deseja realmente excluir este item?',
+  primaryButtonLabel: 'Excluir',
+  onPrimaryPressed: () => print('Excluído'),
+  secondaryButtonLabel: 'Cancelar',
+);
+```
