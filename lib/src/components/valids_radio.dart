@@ -6,118 +6,101 @@ import '../tokens/palette.dart';
 import '../tokens/spacing.dart';
 import '../tokens/typography.dart';
 
-/// DS `focus-ring` / `focus-ring-tight` color: `--color-info-400`.
+/// DS `focus-ring` color: `--color-info-400`.
 Color get _focusRingColor =>
     ValidsPalette.info.tones.firstWhere((t) => t.shade == 400).color;
 
 /// DS hover overlays use the Tailwind `/10` (10% alpha) modifier.
 const double _hoverAlpha = 0.10;
 
-/// A checkbox with optional label and description, mirroring `ds-checkbox`.
+/// A radio button with optional label and description, mirroring `ds-radio`.
 ///
 /// Visuals follow the design system:
-/// - the control is a `size-lg` (24px) icon on a `rounded-sm` hover halo;
-/// - unchecked icon is `icon-soft`; checked/indeterminate use the brand
-///   default tone; [error] wins over checked with `feedback-error-bold`;
+/// - the control is a `size-lg` (24px) icon on a `rounded-full` hover halo;
+/// - unchecked icon is `icon-soft`; checked uses the brand default tone;
 ///   disabled uses `icon-inactive` and shows a not-allowed cursor;
-/// - hover: `brand-primary-default/10` (unchecked),
-///   `brand-primary-bold/10` (checked/indeterminate),
-///   `feedback-error-bold/10` (error);
+/// - hover: `brand-primary-default/10` (unchecked) or
+///   `brand-primary-bold/10` (checked);
 /// - keyboard focus draws the DS focus ring (2px, info-400, no offset —
-///   `focus-ring-tight`);
+///   `focus-ring` + `ring-offset-0`);
 /// - label is `ts-body-md` (`text-default`) and description `ts-body-sm`
-///   (`text-soft`); both become inactive when disabled and error-colored
-///   when [error] is set.
+///   (`text-soft`); both become inactive when disabled.
 ///
-/// Extra beyond the DS: [labelChild] for a rich label (e.g. inline links).
-class ValidsCheckbox extends StatefulWidget {
-  final bool checked;
+/// Extras beyond the DS: [labelChild] for a rich label (e.g. inline links)
+/// and the Flutter-idiomatic [groupValue] pairing for standalone usage.
+class ValidsRadio<T> extends StatefulWidget {
+  final T value;
+  final T? groupValue;
 
-  /// Called with the next checked value. `null` makes the control inert
-  /// (combine with [disabled] for the disabled visuals).
-  final ValueChanged<bool>? onCheckedChange;
+  /// Called with [value] when the radio is selected. `null` makes the
+  /// control inert (combine with [disabled] for the disabled visuals).
+  final ValueChanged<T?>? onCheckedChange;
   final String? label;
   final Widget? labelChild;
   final String? description;
   final bool disabled;
-  final bool indeterminate;
-  final bool error;
 
-  const ValidsCheckbox({
+  const ValidsRadio({
     super.key,
-    required this.checked,
+    required this.value,
+    required this.groupValue,
     required this.onCheckedChange,
     this.label,
     this.labelChild,
     this.description,
     this.disabled = false,
-    this.indeterminate = false,
-    this.error = false,
   });
 
   @override
-  State<ValidsCheckbox> createState() => _ValidsCheckboxState();
+  State<ValidsRadio<T>> createState() => _ValidsRadioState<T>();
 }
 
-class _ValidsCheckboxState extends State<ValidsCheckbox> {
+class _ValidsRadioState<T> extends State<ValidsRadio<T>> {
   bool _hovered = false;
   bool _focused = false;
 
-  /// `size-lg` — the DS checkbox box/icon size.
+  /// `size-lg` — the DS radio circle/icon size.
   static const double _boxSize = ValidsSpacing.lg;
 
-  /// Top inset that centers the box on the first `ts-body-md` label line
+  /// Top inset that centers the circle on the first `ts-body-md` label line
   /// (`leading-xl`), mirroring the DS grid `self-center` placement.
   static const double _labelTopOffset =
       (ValidsTypography.leadingXl - _boxSize) / 2;
 
   bool get _interactive => !widget.disabled && widget.onCheckedChange != null;
 
-  bool get _marked => widget.checked || widget.indeterminate;
+  bool get _selected => widget.value == widget.groupValue;
 
-  void _toggle() => widget.onCheckedChange?.call(!widget.checked);
+  void _select() => widget.onCheckedChange?.call(widget.value);
 
-  IconData get _icon {
-    if (widget.indeterminate) return Icons.indeterminate_check_box;
-    return widget.checked ? Icons.check_box : Icons.check_box_outline_blank;
-  }
-
-  /// `checkbox-icon`: soft → brand (checked/indeterminate) → error → inactive.
+  /// `radio-icon`: soft → brand (checked) → inactive (disabled).
   Color get _iconColor {
     if (widget.disabled) return ValidsColors.textInactive;
-    if (widget.error) return ValidsColors.dangerDark;
-    if (_marked) return ValidsColors.primary;
+    if (_selected) return ValidsColors.primary;
     return ValidsColors.textSoft;
   }
 
   Color get _hoverColor {
-    final Color base = widget.error
-        ? ValidsColors.dangerDark
-        : (_marked ? ValidsColors.primaryDark : ValidsColors.primary);
+    final Color base =
+        _selected ? ValidsColors.primaryDark : ValidsColors.primary;
     return base.withValues(alpha: _hoverAlpha);
   }
 
-  /// `field-label ts-body-md text-default` (+ disabled/invalid overrides).
-  Color get _labelColor {
-    if (widget.disabled) return ValidsColors.textInactive;
-    if (widget.error) return ValidsColors.dangerDark;
-    return ValidsColors.textDefault;
-  }
+  /// `field-label ts-body-md text-default` (+ disabled override).
+  Color get _labelColor =>
+      widget.disabled ? ValidsColors.textInactive : ValidsColors.textDefault;
 
-  /// `field-description ts-body-sm text-soft` (+ disabled/invalid overrides).
-  Color get _descriptionColor {
-    if (widget.disabled) return ValidsColors.textInactive;
-    if (widget.error) return ValidsColors.dangerDark;
-    return ValidsColors.textSoft;
-  }
+  /// `field-description ts-body-sm text-soft` (+ disabled override).
+  Color get _descriptionColor =>
+      widget.disabled ? ValidsColors.textInactive : ValidsColors.textSoft;
 
   Widget _buildControl() {
-    final Widget box = Container(
+    final Widget circle = Container(
       width: _boxSize,
       height: _boxSize,
       decoration: BoxDecoration(
         color: _hovered && _interactive ? _hoverColor : null,
-        borderRadius: ValidsRadius.smRadius,
+        shape: BoxShape.circle,
         boxShadow: _focused
             ? [
                 BoxShadow(
@@ -127,7 +110,11 @@ class _ValidsCheckboxState extends State<ValidsCheckbox> {
               ]
             : null,
       ),
-      child: Icon(_icon, size: _boxSize, color: _iconColor),
+      child: Icon(
+        _selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+        size: _boxSize,
+        color: _iconColor,
+      ),
     );
 
     return FocusableActionDetector(
@@ -140,18 +127,18 @@ class _ValidsCheckboxState extends State<ValidsCheckbox> {
       actions: <Type, Action<Intent>>{
         ActivateIntent: CallbackAction<ActivateIntent>(
           onInvoke: (_) {
-            _toggle();
+            _select();
             return null;
           },
         ),
         ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
           onInvoke: (_) {
-            _toggle();
+            _select();
             return null;
           },
         ),
       },
-      child: box,
+      child: circle,
     );
   }
 
@@ -210,10 +197,10 @@ class _ValidsCheckboxState extends State<ValidsCheckbox> {
 
     return Semantics(
       enabled: _interactive,
-      checked: widget.indeterminate ? null : widget.checked,
-      mixed: widget.indeterminate ? true : null,
+      checked: _selected,
+      inMutuallyExclusiveGroup: true,
       child: GestureDetector(
-        onTap: _interactive ? _toggle : null,
+        onTap: _interactive ? _select : null,
         behavior: HitTestBehavior.opaque,
         child: child,
       ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../tokens/colors.dart';
 import '../tokens/typography.dart';
 
+/// Application top bar (no direct DS counterpart; inherited from the legacy
+/// whitelabel kit and restyled with the ValiDS tokens).
 class ValidsAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
@@ -23,13 +25,14 @@ class ValidsAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(
         title,
-        style: ValidsTypography.h3.copyWith(color: ValidsColors.white),
+        style: ValidsTypography.headingMd
+            .copyWith(color: ValidsColors.textInvert),
       ),
       actions: actions,
       leading: leading,
       centerTitle: centerTitle,
       backgroundColor: backgroundColor ?? ValidsColors.primary,
-      iconTheme: const IconThemeData(color: ValidsColors.white),
+      iconTheme: const IconThemeData(color: ValidsColors.textInvert),
       elevation: 0,
     );
   }

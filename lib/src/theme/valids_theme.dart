@@ -8,36 +8,40 @@ class ValidsTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: ValidsTypography.fontFamily,
       primaryColor: ValidsColors.primary,
-      scaffoldBackgroundColor: ValidsColors.background,
+      scaffoldBackgroundColor: ValidsColors.backgroundDefault,
       colorScheme: ColorScheme.light(
         primary: ValidsColors.primary,
         secondary: ValidsColors.primaryLight,
         surface: ValidsColors.surface,
         error: ValidsColors.danger,
-        onPrimary: ValidsColors.white,
-        onSecondary: ValidsColors.white,
-        onSurface: ValidsColors.black,
-        onError: ValidsColors.white,
+        onPrimary: ValidsColors.textInvert,
+        onSecondary: ValidsColors.textInvert,
+        onSurface: ValidsColors.textDefault,
+        onError: ValidsColors.textInvert,
       ),
-      textTheme: TextTheme(
-        displayLarge: ValidsTypography.h1,
-        displayMedium: ValidsTypography.h2,
-        displaySmall: ValidsTypography.h3,
-        bodyLarge: ValidsTypography.body,
-        labelLarge: ValidsTypography.button,
+      textTheme: const TextTheme(
+        displayLarge: ValidsTypography.headingXl,
+        displayMedium: ValidsTypography.headingLg,
+        displaySmall: ValidsTypography.headingMd,
+        headlineLarge: ValidsTypography.headingXl,
+        headlineMedium: ValidsTypography.headingLg,
+        headlineSmall: ValidsTypography.headingMd,
+        titleLarge: ValidsTypography.headingMd,
+        titleMedium: ValidsTypography.headingSm,
+        titleSmall: ValidsTypography.captionMd,
+        bodyLarge: ValidsTypography.bodyLg,
+        bodyMedium: ValidsTypography.bodyMd,
+        bodySmall: ValidsTypography.bodySm,
+        labelLarge: ValidsTypography.buttonMd,
+        labelMedium: ValidsTypography.captionMd,
+        labelSmall: ValidsTypography.captionSm,
+      ).apply(
+        bodyColor: ValidsColors.textDefault,
+        displayColor: ValidsColors.textDefault,
       ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: ValidsColors.primary,
-          foregroundColor: ValidsColors.white,
-          textStyle: ValidsTypography.button,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        ),
-      ),
+      dividerColor: ValidsColors.borderDefault,
     );
   }
 }

@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import '../tokens/borders.dart';
 import '../tokens/colors.dart';
+import '../tokens/spacing.dart';
 
+/// A placeholder shown while content is loading.
+///
+/// Mirrors the design system's Skeleton (`.ds-skeleton`): a
+/// `background-color-soft` block with `radius-sm` corners that pulses its
+/// opacity between 1 and 0.5 (the 1.5s `heartbeat` animation).
 class ValidsSkeleton extends StatefulWidget {
   final double width;
   final double height;
@@ -9,8 +16,8 @@ class ValidsSkeleton extends StatefulWidget {
   const ValidsSkeleton({
     super.key,
     this.width = double.infinity,
-    this.height = 20,
-    this.borderRadius = 4,
+    this.height = ValidsSpacing.md,
+    this.borderRadius = ValidsRadius.sm,
   });
 
   @override
@@ -19,19 +26,34 @@ class ValidsSkeleton extends StatefulWidget {
 
 class _ValidsSkeletonState extends State<ValidsSkeleton>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
+  /// DS: `animation: 1.5s infinite heartbeat`.
+  static const Duration _heartbeatDuration = Duration(milliseconds: 1500);
+
+  /// DS `heartbeat` keyframes: opacity 1 → 0.5 → 1.
+  static const double _minOpacity = 0.5;
+
+  late final AnimationController _controller;
+  late final Animation<double> _opacity;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: _heartbeatDuration,
     )..repeat();
-    _animation = Tween<double>(begin: -2, end: 2).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
-    );
+    _opacity = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1, end: _minOpacity)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 50,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: _minOpacity, end: 1)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 50,
+      ),
+    ]).animate(_controller);
   }
 
   @override
@@ -42,26 +64,16 @@ class _ValidsSkeletonState extends State<ValidsSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Container(
-          width: widget.width,
-          height: widget.height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-            gradient: LinearGradient(
-              begin: Alignment(_animation.value - 1, 0),
-              end: Alignment(_animation.value + 1, 0),
-              colors: const [
-                ValidsColors.grey200,
-                ValidsColors.grey100,
-                ValidsColors.grey200,
-              ],
-            ),
-          ),
-        );
-      },
+    return FadeTransition(
+      opacity: _opacity,
+      child: Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          color: ValidsColors.backgroundSoft, // DS: background-color-soft
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+        ),
+      ),
     );
   }
 }

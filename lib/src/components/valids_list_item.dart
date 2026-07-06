@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import '../tokens/borders.dart';
 import '../tokens/colors.dart';
-import '../tokens/typography.dart';
 import '../tokens/spacing.dart';
+import '../tokens/typography.dart';
 
+/// A list row with title, optional subtitle, leading and trailing content
+/// (no direct DS counterpart; inherited from the legacy whitelabel kit and
+/// restyled with the ValiDS tokens).
 class ValidsListItem extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Widget? leading;
   final Widget? trailing;
   final VoidCallback? onTap;
-  final bool isDisabled;
+  final bool disabled;
 
   const ValidsListItem({
     super.key,
@@ -18,7 +22,7 @@ class ValidsListItem extends StatelessWidget {
     this.leading,
     this.trailing,
     this.onTap,
-    this.isDisabled = false,
+    this.disabled = false,
   });
 
   @override
@@ -26,28 +30,36 @@ class ValidsListItem extends StatelessWidget {
     return ListTile(
       title: Text(
         title,
-        style: ValidsTypography.body.copyWith(
-          fontWeight: FontWeight.w600,
-          color: isDisabled ? ValidsColors.grey500 : ValidsColors.black,
+        style: ValidsTypography.captionLg.copyWith(
+          color:
+              disabled ? ValidsColors.textInactive : ValidsColors.textDefault,
         ),
       ),
       subtitle: subtitle != null
           ? Text(
               subtitle!,
-              style: ValidsTypography.caption.copyWith(
-                color: isDisabled ? ValidsColors.grey400 : ValidsColors.grey600,
+              style: ValidsTypography.bodySm.copyWith(
+                color:
+                    disabled ? ValidsColors.textInactive : ValidsColors.textSoft,
               ),
             )
           : null,
       leading: leading,
-      trailing: trailing ?? (onTap != null ? const Icon(Icons.chevron_right, color: ValidsColors.grey400) : null),
-      onTap: isDisabled ? null : onTap,
+      trailing: trailing ??
+          (onTap != null
+              ? const Icon(Icons.chevron_right,
+                  color: ValidsColors.textInactive)
+              : null),
+      onTap: disabled ? null : onTap,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: ValidsSpacing.md,
-        vertical: ValidsSpacing.xs,
+        vertical: ValidsSpacing.xs2,
       ),
-      shape: Border(
-        bottom: BorderSide(color: ValidsColors.grey200, width: 1),
+      shape: const Border(
+        bottom: BorderSide(
+          color: ValidsColors.borderDefault,
+          width: ValidsBorderWidth.sm,
+        ),
       ),
     );
   }

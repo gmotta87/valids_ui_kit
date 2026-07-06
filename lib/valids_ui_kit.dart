@@ -1,8 +1,15 @@
 library valids_ui_kit;
 
 export 'src/tokens/colors.dart';
+export 'src/tokens/palette.dart';
 export 'src/tokens/typography.dart';
 export 'src/tokens/spacing.dart';
+export 'src/tokens/sizing.dart';
+export 'src/tokens/borders.dart';
+export 'src/tokens/icons.dart';
+export 'src/tokens/shadows.dart';
+export 'src/tokens/breakpoints.dart';
+export 'src/theme/valids_brand.dart';
 export 'src/theme/valids_theme.dart';
 
 // Components
@@ -19,3 +26,36 @@ export 'src/components/valids_icon_button.dart';
 export 'src/components/valids_dialog.dart';
 export 'src/components/valids_list_item.dart';
 export 'src/components/valids_app_bar.dart';
+export 'src/components/valids_accordion.dart';
+export 'src/components/valids_alert_dialog.dart';
+export 'src/components/valids_anchor.dart';
+export 'src/components/valids_avatar.dart';
+export 'src/components/valids_checkbox_group.dart';
+export 'src/components/valids_collapsible.dart';
+export 'src/components/valids_combobox.dart';
+export 'src/components/valids_copy_button.dart';
+export 'src/components/valids_data_table.dart';
+export 'src/components/valids_date_picker.dart';
+export 'src/components/valids_date_range_picker.dart';
+export 'src/components/valids_infotip.dart';
+export 'src/components/valids_number_picker.dart';
+export 'src/components/valids_pagination.dart';
+export 'src/components/valids_radio.dart';
+export 'src/components/valids_select.dart';
+export 'src/components/valids_stepper.dart';
+export 'src/components/valids_switch_group.dart';
+export 'src/components/valids_table.dart';
+export 'src/components/valids_tabs.dart';
+export 'src/components/valids_text_area.dart';
+export 'src/components/valids_text_field.dart';
+export 'src/components/valids_toast.dart';
+export 'src/components/valids_toggle.dart';
+export 'src/components/valids_toggle_group.dart';
+
+// Components inherited from the legacy whitelabel library (not in the DS)
+export 'src/components/valids_card.dart';
+export 'src/components/valids_illustration.dart';
+export 'src/components/valids_menu_item.dart';
+export 'src/components/valids_bottom_sheet.dart';
+export 'src/components/valids_navigation_bar.dart';
+export 'src/components/valids_text_group.dart';
